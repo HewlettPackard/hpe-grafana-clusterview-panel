@@ -23,37 +23,132 @@
   "panels": [
     {
       "datasource": {
-        "type": "grafana",
-        "uid": "grafana"
+        "type": "testdata",
+        "uid": "testdataid"
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 11,
+        "w": 8,
         "x": 0,
         "y": 0
       },
       "id": 1,
       "options": {
-        "seriesCountSize": "sm",
-        "showSeriesCount": false,
-        "text": "Default value of text input option"
+        "aggregate": "last",
+        "bordercolor": "#000000",
+        "fieldgrp1": "location",
+        "fieldgrp2": "location",
+"fieldgrp3": "location",
+        "gridX1": 2,
+        "gridX2": 2,
+        "gridX3": 2,
+        "gridX4": 2,
+        "gridX5": 2,
+        "gridX6": 2,
+        "gridX7": 2,
+        "gridX8": 2,
+        "hiddennodes": "[/rack-c/,/3/,/3/]",
+        "ignoreNull": false,
+        "level1border": true,
+        "level1direction": "gr",
+        "level1label": false,
+        "level2border": true,
+        "level2direction": "vt",
+        "level2label": true,
+        "level3border": false,
+        "level3direction": "hz",
+        "level3label": false,
+        "level4border": false,
+        "level4direction": "vt",
+        "level4label": false,
+        "level5border": false,
+        "level5direction": "hz",
+        "level5label": false,
+        "level6border": false,
+        "level6direction": "hz",
+        "level6label": false,
+        "level7border": false,
+        "level7direction": "hz",
+        "level7label": false,
+        "level8border": false,
+        "level8direction": "hz",
+        "level8label": false,
+        "matchgrp1": "(rack-\\w) \\d \\d",
+        "matchgrp2": "rack-\\w (\\d) \\d",
+        "matchgrp3": "rack-\\w \\d (\\d)",
+        "missingcolor": "#202020",
+        "nodeURL": "",
+        "nodeURLNewWindow": false,
+        "nodeX": 70,
+        "nodeY": 40,
+        "nodetext": "${value}",
+        "nodetextDisplayed": false,
+        "nodevalue": "value",
+        "thresholdcolor1": "dark-green",
+        "thresholdcolor2": "#2afa37",
+        "thresholdcolor3": "red",
+        "thresholdvalue1": 12,
+        "thresholdvalue2": 15,
+        "thresholdvalue3": 17,
+        "timestampField": "0",
+        "valuesgrp1": "rack-a,rack-b,rack-c,rack-d",
+        "valuesgrp2": "1,2,3",
+        "valuesgrp3": "1,2,3"
       },
       "targets": [
         {
+          "alias": "",
+          "csvContent": "location,name,value\r\nrack-a 1 1, node001, 12.1\r\nrack-a 1 2, node002, 12.5\r\nrack-a 1 3, node004, 12.0\r\nrack-a 2 1, node003, 15.1\r\nrack-a 2 2, node003, 18.3\r\nrack-a 2 3, node004, 14.0\r\nrack-a 3 2, node005, 12.7\r\nrack-a 3 3, node006, 10.0\r\nrack-a 3 1, node007, 20.0\r\nrack-b 3 1, node008, 10.1\r\nrack-b 3 3, node009, 11.5\r\nrack-b 3 2, node010, 13.8\r\nrack-b 2 1, node011, 11.5\r\nrack-b 2 2, node011, 15.5\r\nrack-b 2 3, node012, 13.1\r\nrack-b 1 1, node013, 18.1\r\nrack-b 1 2, node014, 14.0\r\nrack-b 1 3, node015, 14.0\r\nrack-c 3 2, node016, 10.1\r\nrack-c 1 3, node017, 11.5\r\nrack-c 3 1, node018, 18.1\r\nrack-c 3 2, node019, 14.0",
           "datasource": {
-            "type": "datasource",
-            "uid": "grafana"
+            "type": "testdata",
+            "uid": "testdataid"
           },
-          "queryType": "randomWalk",
-          "refId": "A"
+          "refId": "A",
+          "scenarioId": "csv_content"
         }
       ],
       "title": "Panel Title",
-      "type": "hewlettpackardenterprise-hpegrafanaclusterview-panel"
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "location": {
+                "aggregations": [
+                  "allValues"
+                ],
+                "operation": "groupby"
+              },
+              "name": {
+                "aggregations": [
+                  "allValues"
+                ],
+                "operation": "groupby"
+              },
+              "value": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              }
+  }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "value (lastNotNull)": "value"
+            }
+          }
+        }
+      ],
+      "type": "hpe-grafanaclusterview-panel"
     }
   ],
-  "refresh": "",
-  "schemaVersion": 38,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {

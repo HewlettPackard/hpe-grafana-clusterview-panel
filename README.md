@@ -1,114 +1,125 @@
-# Grafana panel plugin template
+# Clusterview Grafana Plugin
 
-This template is a starting point for building a panel plugin for Grafana.
+A plugin for grafana that provides a dense view of data points.
 
-## What are Grafana panel plugins?
+![Screenshot](doc/img/dashboard.png)
 
-Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more.
 
-Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
 
-## Getting started
+## Expected Query Data Format
+Data is expected in the long format with a value column and one or more columns describing the layout. Additional field(s) can be present to provide additional information for mouseover, in-block display, or URLs for clickable links.
 
-### Frontend
+A minimal example of query data:
 
-1. Install dependencies
+|      location |value|
+| ------------- |-----|
+| x1000c0s0b0n0 | 20.1|
+| x1000c1s2b1n0 | 21.2|
+| x1001c0s7b0n0 | 20.7|
+|...|
 
-   ```bash
-   npm install
-   ```
 
-2. Build plugin in development mode and run in watch mode
+A more complex query might add fields for additional text displays or urls, and/or split the location to multiple fields:
 
-   ```bash
-   npm run dev
-   ```
+| name      |  row  | slot | index |value| extid  |
+| -         | -     | -    | -     | -   | -      |
+| node 11-0 | 1     | 1    | 0     | 20.1| bk39dj |
+| node 12-0 | 1     | 2    | 0     | 21.2| sMfek3 |
+| node 21-0 | 2     | 1    | 0     | 20.7| BL9bap |
+| node 21-1 | 2     | 1    | 1     | 16.0| LQ0doV |
+|...|
 
-3. Build plugin in production mode
 
-   ```bash
-   npm run build
-   ```
 
-4. Run the tests (using Jest)
+### Data Grouping
+The display is organized into a hierarchy based on one or more fields. Each layer of the hierachy can be configured differently to result in more complex layouts.
 
-   ```bash
-   # Runs the tests and watches for changes, requires git init first
-   npm run test
+![layout group screenshot](doc/img/layoutgroup.png)
 
-   # Exits after running all the tests
-   npm run test:ci
-   ```
+#### Field
+Defines which field contains the location data for this layer. This can be either the name of the Field or can be a zero-indexed integer. If left blank, this will be the final layout group in the hierarchy.
 
-5. Spin up a Grafana instance and run the plugin inside it (using Docker)
+#### Regex Match
+A regular expression to extract location data from a field. This should be a regex with a singular capture group that defines the values for this layer in the hierarchy. If a Field does not need to be divided into pieces this can be left blank and the entire value will be used.
 
-   ```bash
-   npm run server
-   ```
+For example, if the location field looks like `x1000c0s0b0n0` then the regex match fields might be written as:
 
-6. Run the E2E tests (using Cypress)
+1. `(x\d+)` - identifier: x1000
+1. `x\d+(c\d)` - identifier: c0
+1. `x\d+c\d(s\d)` - identifier: s0
 
-   ```bash
-   # Spins up a Grafana instance first that we tests against
-   npm run server
+#### Possible Values
+a set of possible instances that can exist for this layer can be specified here. A null-value placeholder will be shown for any values listed that are not present in the query. This can create a consistent output when query data is missing. It is also used to specificy an order to the values, which are otherwise displayed in the order of data in the query.
 
-   # Starts the tests
-   npm run e2e
-   ```
+#### Draw border and Show Label
+Show labels or (partial) borders around data. 
 
-7. Run the linter
+Note: The borders and labels display around all entities in a layer and not individual instances in the layer, so their application may not always be intuitive.
 
-   ```bash
-   npm run lint
+#### Layout
+Each layer (group) of the hierarchy can be laid out in a different layout orientation. 
+Multiple layers with different layouts can combine to result in a complex arrangement.
+The layout types are:
+ * horizontal - nodes display across the screen
+ * vertical - nodes display vertically.
+ * flow - like horizontal, but will wrap to the next line
+ * grid - like flow, but the wrapping 
 
-   # or
+### Node
 
-   npm run lint:fix
-   ```
+The node section describes details about displaying nodes.
 
-# Distributing your plugin
+![ode screenshot](doc/img/node.png)
 
-When distributing a Grafana plugin either within the community or privately the plugin must be signed so the Grafana application can verify its authenticity. This can be done with the `@grafana/sign-plugin` package.
+#### Node URL
 
-_Note: It's not necessary to sign a plugin during development. The docker development environment that is scaffolded with `@grafana/create-plugin` caters for running the plugin without a signature._
+If Node URL is present, each node is made into a link to the given url. Variables can included in the url as well `${FieldName}`.
 
-## Initial steps
+#### Node Text
 
-Before signing a plugin please read the Grafana [plugin publishing and signing criteria](https://grafana.com/legal/plugins/#plugin-publishing-and-signing-criteria) documentation carefully.
+The text to display on mouseover, or if In-Node Display is selected, directly on the node.
 
-`@grafana/create-plugin` has added the necessary commands and workflows to make signing and distributing a plugin via the grafana plugins catalog as straightforward as possible.
+#### Value Field
 
-Before signing a plugin for the first time please consult the Grafana [plugin signature levels](https://grafana.com/legal/plugins/#what-are-the-different-classifications-of-plugins) documentation to understand the differences between the types of signature level.
+Use this to specify the value used to determine colors for the display. This can be an integer index for the Field or the Field name.
 
-1. Create a [Grafana Cloud account](https://grafana.com/signup).
-2. Make sure that the first part of the plugin ID matches the slug of your Grafana Cloud account.
-   - _You can find the plugin ID in the `plugin.json` file inside your plugin directory. For example, if your account slug is `acmecorp`, you need to prefix the plugin ID with `acmecorp-`._
-3. Create a Grafana Cloud API key with the `PluginPublisher` role.
-4. Keep a record of this API key as it will be required for signing a plugin
+* `1`
+* `value`
 
-## Signing a plugin
+For advanced uses, the value field can contain javascript to augment/replace the value considered for coloring. This javascript will execute for each row of data. An array named `fields` is made available that provides the data for each column as either index, name, or display name. This should always return a numerical value.
 
-### Using Github actions release workflow
+* `return fields[1]*2`
+* `var a=fields['value'];if (a>15) return 1 else return 0`
 
-If the plugin is using the github actions supplied with `@grafana/create-plugin` signing a plugin is included out of the box. The [release workflow](./.github/workflows/release.yml) can prepare everything to make submitting your plugin to Grafana as easy as possible. Before being able to sign the plugin however a secret needs adding to the Github repository.
+#### Hidden Nodes
 
-1. Please navigate to "settings > secrets > actions" within your repo to create secrets.
-2. Click "New repository secret"
-3. Name the secret "GRAFANA_API_KEY"
-4. Paste your Grafana Cloud API key in the Secret field
-5. Click "Add secret"
+In some cases there may be nodes you wish to set aside space for but do not wish to display as missing. This might be to match a physical layout where something isn't present or populated. The hidden nodes field allows this. It takes one or more arrays of regexes to match against the different values in each layer group.
 
-#### Push a version tag
+For each match desired, an array should be provided. That array should have the same number of elements as there are layers in the hierarchy. Each element should be a regex (escaped with /) that matches data on that layer. An array of regexes can be provided if only one match is needed. If there are multiple, an array of arrays should be used.
 
-To trigger the workflow we need to push a version tag to github. This can be achieved with the following steps:
+Given a dashboard having a 3 layer group hierarchy with the first layer of a,b,c; the second layer of 1,2,3; and the third layer also 1,2,3; the following would be examples of hidden node values:
+* `[ /a/, /1/, /2/]` - node a12 will be left blank.
+* `[ [ /b/, /.*/, /.*/],  [ /c/, /1/, /.*/]]` - All of b* and anything starting with c1* will be left blank.
 
-1. Run `npm version <major|minor|patch>`
-2. Run `git push origin main --follow-tags`
+### Values/Colors
 
-## Learn more
+A configuration for the spectrum of colors to display. Colors will be interpolated based on the query value. Values outside the range of given thresholds will be clamped to the nearest endpoint.
 
-Below you can find source code for existing app plugins and other related documentation.
+#### Threshold Color/Value
 
-- [Basic panel plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/panel-basic#readme)
-- [`plugin.json` documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
-- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
+A singular color point at a particular value. Multiple thresholds can be specified to provide a full spectrum of colors.
+
+Exact colors for ranges are not yet supported. If only explicit values are desired, the data must either be augmented to hit values exactly or multiple thresholds of the same colors can be provided such that interpolation results in the same color.
+
+### Aggregate
+
+In the case of timeseries data, do an aggregate to reduce each node to a singular value. It's not recommended to do this in the query and/or transform if possible.
+
+#### Timestamp Field
+The field to use as a timestamp. Relatively 
+#### Aggregate data
+
+#### Ignore Null Values
+
+If set, null values will be filtered out of the dataset. 
+

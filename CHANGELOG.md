@@ -1,5 +1,15 @@
 # Changelog
 
-## 1.0.0 (Unreleased)
+## 1.1.1
+* Remove extra nodes when when aggregate is not used
+* documentation and text cleanup
+* publicly released
 
-Initial release.
+## 1.1.0
+
+* Grafana 9.x support
+* Fix for Safari browser
+
+## 1.0.0
+
+* Initial release.

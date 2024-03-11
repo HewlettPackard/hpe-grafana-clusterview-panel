@@ -2,12 +2,12 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
   "name": "Hpe-Grafana-Clusterview-Panel",
-  "id": "hewlettpackardenterprise-hpegrafanaclusterview-panel",
+  "id": "hpe-grafanaclusterview-panel",
   "info": {
     "keywords": ["panel"],
     "description": "A high density view of large amounts of data focused on high performance computing",
     "author": {
-      "name": "Hewlett packard enterprise"
+      "name": "Hewlett Packard Enterprise"
     },
     "logos": {
       "small": "img/logo.svg",
@@ -19,7 +19,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=10.3.3",
+    "grafanaDependency": ">=9.3.16",
     "plugins": []
   }
 }

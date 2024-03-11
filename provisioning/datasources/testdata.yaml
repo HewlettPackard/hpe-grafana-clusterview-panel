@@ -1,0 +1,6 @@
+apiVersion: 1
+
+datasources:
+  - name: TestData Datasource
+    type: testdata
+    uid: testdataid

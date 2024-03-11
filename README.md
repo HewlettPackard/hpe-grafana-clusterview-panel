@@ -115,10 +115,16 @@ Exact colors for ranges are not yet supported. If only explicit values are desir
 
 In the case of timeseries data, do an aggregate to reduce each node to a singular value. It's not recommended to do this in the query and/or transform if possible.
 
-#### Timestamp Field
-The field to use as a timestamp. Relatively 
 #### Aggregate data
+In the case of multiple duplicate entries, use this method to merge them together.
+* None - Don't do any merging. If any duplicates exist the most recent value from the query is used.
+* Max - maximum value of all duplicates.
+* Min - minimum value of all duplicates.
+* Avg - the average of all duplicates.
+* Last - the most recent value is used. This requires a Timestamp Field to be selected.
 
+#### Timestamp Field
+The field to use as a timestamp. Only required in the case of using `last` as an aggregate
 #### Ignore Null Values
 
 If set, null values will be filtered out of the dataset. 

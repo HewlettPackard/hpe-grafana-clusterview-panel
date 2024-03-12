@@ -113,7 +113,7 @@ Exact colors for ranges are not yet supported. If only explicit values are desir
 
 ### Aggregate
 
-In the case of timeseries data, do an aggregate to reduce each node to a singular value. It's not recommended to do this in the query and/or transform if possible.
+In the case of timeseries data, do an aggregate to reduce each node down to a singular value. In most cases modifying the query to only report the latest data for each node is a more desirable solution than using an aggregate (especially for performance of large dashboards).
 
 #### Aggregate data
 In the case of multiple duplicate entries, use this method to merge them together.

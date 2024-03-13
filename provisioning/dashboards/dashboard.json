@@ -107,7 +107,7 @@
           "scenarioId": "csv_content"
         }
       ],
-      "title": "Panel Title",
+      "title": "Racks",
       "transformations": [
         {
           "id": "groupBy",

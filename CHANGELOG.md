@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.1
+## 1.2.0
 * Remove extra nodes when when aggregate is not used
 * documentation and text cleanup
 * publicly released

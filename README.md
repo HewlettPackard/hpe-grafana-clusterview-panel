@@ -1,6 +1,6 @@
 # Clusterview Grafana Plugin
 
-A plugin for grafana that provides a dense view of data points.
+A plugin for Grafana that provides a dense view of data points.
 
 ![Screenshot](doc/img/dashboard.png)
 
@@ -19,7 +19,7 @@ A minimal example of query data:
 |...|
 
 
-A more complex query might add fields for additional text displays or urls, and/or split the location to multiple fields:
+A more complex query might add fields for additional text displays or URLs, and/or split the location to multiple fields:
 
 | name      |  row  | slot | index |value| extid  |
 | -         | -     | -    | -     | -   | -      |
@@ -47,9 +47,11 @@ For example, if the location field looks like `x1000c0s0b0n0` then the regex mat
 1. `(x\d+)` - identifier: x1000
 1. `x\d+(c\d)` - identifier: c0
 1. `x\d+c\d(s\d)` - identifier: s0
+1. `x\d+c\ds\d(b\d)` - identifier: b0
+1. `x\d+c\ds\db\d(n\d)` - identifier: n0
 
 #### Possible Values
-a set of possible instances that can exist for this layer can be specified here. A null-value placeholder will be shown for any values listed that are not present in the query. This can create a consistent output when query data is missing. It is also used to specificy an order to the values, which are otherwise displayed in the order of data in the query.
+A set of possible instances that can exist for this layer can be specified here. A null-value placeholder will be shown for any values listed that are not present in the query. This can create a consistent output when query data is missing. It is also used to specify an order to the values, which are otherwise displayed in the order of data in the query.
 
 #### Draw border and Show Label
 Show labels or (partial) borders around data. 
@@ -60,10 +62,10 @@ Note: The borders and labels display around all entities in a layer and not indi
 Each layer (group) of the hierarchy can be laid out in a different layout orientation. 
 Multiple layers with different layouts can combine to result in a complex arrangement.
 The layout types are:
- * horizontal - nodes display across the screen
- * vertical - nodes display vertically.
- * flow - like horizontal, but will wrap to the next line
- * grid - like flow, but the wrapping 
+ * Horizontal - Nodes display across the screen.
+ * Vertical - Nodes display vertically.
+ * Flow - Similar to horizontal, but will wrap to the next line.
+ * Grid - Display with a fixed number of columns.
 
 ### Node
 
@@ -73,11 +75,11 @@ The node section describes details about displaying nodes.
 
 #### Node URL
 
-If Node URL is present, each node is made into a link to the given url. Variables can included in the url as well `${FieldName}`.
+If Node URL is present, each node is made into a link to the given URL. Variables can be included in the URL as well `${FieldName}`.
 
 #### Node Text
 
-The text to display on mouseover, or if In-Node Display is selected, directly on the node.
+The text to display on mouseover, or if In-Node Display is selected, directly on the node. Variables can be included in the text.
 
 #### Value Field
 
@@ -113,15 +115,15 @@ Exact colors for ranges are not yet supported. If only explicit values are desir
 
 ### Aggregate
 
-In the case of timeseries data, do an aggregate to reduce each node down to a singular value. In most cases modifying the query to only report the latest data for each node is a more desirable solution than using an aggregate (especially for performance of large dashboards).
+In the case of timeseries data, do an aggregate to reduce each node down to a singular value. In most cases, modifying the query to only report the latest data for each node is a more desirable solution than using an aggregate (especially for performance of large dashboards).
 
 #### Aggregate data
 In the case of multiple duplicate entries, use this method to merge them together.
-* None - Don't do any merging. If any duplicates exist the most recent value from the query is used.
-* Max - maximum value of all duplicates.
-* Min - minimum value of all duplicates.
-* Avg - the average of all duplicates.
-* Last - the most recent value is used. This requires a Timestamp Field to be selected.
+* None - Don't do any merging. If any duplicates exist, the most recent value from the query is used.
+* Max - Maximum value of all duplicates.
+* Min - Minimum value of all duplicates.
+* Avg - The average of all duplicates.
+* Last - The most recent value is used. This requires a Timestamp Field to be selected.
 
 #### Timestamp Field
 The field to use as a timestamp. Only required in the case of using `last` as an aggregate

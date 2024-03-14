@@ -6,5 +6,7 @@ e2e.scenario({
   scenario: () => {
     e2e.pages.Home.visit();
     e2e().contains('Welcome to Grafana').should('be.visible');
+    e2e().visit("http://localhost:3000/d/clusterview1/provisioned-hpe-grafana-clusterview-panel-dashboard")
+    e2e().contains("Racks").should('be.visible');
   },
 });

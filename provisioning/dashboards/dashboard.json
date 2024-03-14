@@ -161,6 +161,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "Provisioned hpe-grafana-clusterview-panel dashboard",
+  "uid": "clusterview1",
   "version": 0,
   "weekStart": ""
 }

@@ -4,7 +4,9 @@
   "name": "Hpe-Grafana-Clusterview-Panel",
   "id": "hpe-grafanaclusterview-panel",
   "info": {
-    "keywords": ["panel"],
+    "keywords": [
+      "panel", "cluster", "scale"
+    ],
     "description": "A high density view of large amounts of data focused on high performance computing",
     "author": {
       "name": "Hewlett Packard Enterprise"
@@ -13,8 +15,30 @@
       "small": "img/logo.svg",
       "large": "img/logo.svg"
     },
-    "links": [],
-    "screenshots": [],
+    "links": [
+      {
+        "name": "GitHub",
+        "url": "https://github.com/HewlettPackard/hpe-grafana-clusterview-panel"
+      },
+      {
+        "name": "Apache License",
+        "url": "https://github.com/HewlettPackard/hpe-grafana-clusterview-panel/blob/main/LICENSE"
+      }
+    ],
+    "screenshots": [
+      {
+        "name": "Dashboard",
+        "path": "img/dashboard.png"
+      },
+      {
+        "name": "Layout Group",
+        "path": "img/layoutgroup.png"
+      },
+      {
+        "name": "Node",
+        "path": "img/node.png"
+      }
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },

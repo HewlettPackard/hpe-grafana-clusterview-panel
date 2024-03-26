@@ -1,8 +1,8 @@
 # Clusterview Grafana Plugin
 
-A plugin for Grafana that provides a dense view of data points.
+A dense view of data points focused on high performance computing.
 
-![Screenshot](doc/img/dashboard.png)
+![Screenshot](https://raw.githubusercontent.com/HewlettPackard/hpe-grafana-clusterview-panel/v1.x-docs/doc/img/dashboard.png)
 
 
 
@@ -34,7 +34,7 @@ A more complex query might add fields for additional text displays or URLs, and/
 ### Data Grouping
 The display is organized into a hierarchy based on one or more fields. Each layer of the hierachy can be configured differently to result in more complex layouts.
 
-![layout group screenshot](doc/img/layoutgroup.png)
+![layout group screenshot](https://raw.githubusercontent.com/HewlettPackard/hpe-grafana-clusterview-panel/v1.x-docs/doc/img/layoutgroup.png)
 
 #### Field
 Defines which field contains the location data for this layer. This can be either the name of the Field or can be a zero-indexed integer. If left blank, this will be the final layout group in the hierarchy.
@@ -71,7 +71,7 @@ The layout types are:
 
 The node section describes details about displaying nodes.
 
-![ode screenshot](doc/img/node.png)
+![Node screenshot](https://raw.githubusercontent.com/HewlettPackard/hpe-grafana-clusterview-panel/v1.x-docs/doc/img/node.png)
 
 #### Node URL
 

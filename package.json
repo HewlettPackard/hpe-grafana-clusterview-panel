@@ -1,6 +1,6 @@
 {
   "name": "hpe-grafanaclusterview-panel",
-  "version": "1.2",
+  "version": "1.2.0",
   "description": "A high density view of large amounts of data focused on high performance computing",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",

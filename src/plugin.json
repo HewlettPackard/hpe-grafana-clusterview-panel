@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Hpe-Grafana-Clusterview-Panel",
-  "id": "hpe-grafanaclusterview-panel",
+  "name": "Hpehpc-Grafana-Clusterview-Panel",
+  "id": "hpehpc-grafanaclusterview-panel",
   "info": {
     "keywords": [
       "panel", "cluster", "scale"

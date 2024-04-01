@@ -1,5 +1,5 @@
 {
-  "name": "hpe-grafanaclusterview-panel",
+  "name": "hpehpc-grafanaclusterview-panel",
   "version": "1.2.0",
   "description": "A high density view of large amounts of data focused on high performance computing",
   "scripts": {

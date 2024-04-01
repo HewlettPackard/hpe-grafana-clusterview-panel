@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'hpe-grafanaclusterview-panel'
+    container_name: 'hpehpc-grafanaclusterview-panel'
     platform: 'linux/amd64'
     build:
       context: ./.config
@@ -15,5 +15,5 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/hpe-grafanaclusterview-panel
+      - ./dist:/var/lib/grafana/plugins/hpehpc-grafanaclusterview-panel
       - ./provisioning:/etc/grafana/provisioning

@@ -1,7 +1,7 @@
 apiVersion: 1
 
 providers:
-  - name: 'hpe-grafana-clusterview-panel'
+  - name: 'hpehpc-grafana-clusterview-panel'
     type: file
     options:
       path: /etc/grafana/provisioning/dashboards

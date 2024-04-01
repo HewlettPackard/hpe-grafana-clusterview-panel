@@ -145,7 +145,7 @@
           }
         }
       ],
-      "type": "hpe-grafanaclusterview-panel"
+      "type": "hpehpc-grafanaclusterview-panel"
     }
   ],
   "schemaVersion": 37,
@@ -160,7 +160,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Provisioned hpe-grafana-clusterview-panel dashboard",
+  "title": "Provisioned hpehpc-grafana-clusterview-panel dashboard",
   "uid": "clusterview1",
   "version": 0,
   "weekStart": ""

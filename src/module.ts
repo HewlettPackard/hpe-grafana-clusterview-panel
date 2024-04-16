@@ -1,6 +1,7 @@
 import { PanelPlugin, PanelOptionsEditorBuilder } from '@grafana/data';
-import { ClusterviewOptions, MAX_THRESHOLDS } from './types';
-import { ClusterviewPanel } from './ClusterviewPanel';
+import { ClusterviewPanel } from 'ClusterviewPanel';
+import { ConditionEditor } from 'ThresholdEditor';
+import { ClusterviewOptions } from 'types';
 // import { PanelOptionsEditorBuilder } from '@grafana/data/utils/';
 
 /**
@@ -17,44 +18,6 @@ function showLevel(conf: ClusterviewOptions, lvl: number): boolean {
   return conf[key] != null; // purposely skip type check to catch both null and undef
 }
 
-/**
- * Helper to determine if to show a threshold
- * @param conf Panel options
- * @param lvl group level to check
- * @returns true or false
- */
-function showThreshold(conf: ClusterviewOptions, lvl: number): boolean {
-  if (lvl === 1) {
-    return true;
-  }
-  let key = `thresholdvalue${lvl - 1}` as unknown as keyof ClusterviewOptions;
-  return conf[key] != null;
-}
-
-/**
- * Build an option for a single pair of color threshold options
- * @param builder builder to register under
- * @param lvl group level
- */
-function buildColorOption(builder: PanelOptionsEditorBuilder<ClusterviewOptions>, lvl: number) {
-  let category = ['Values/Colors', `${lvl}`];
-  builder
-    .addColorPicker({
-      category: category,
-      name: `Threshold Color`,
-      path: `thresholdcolor${lvl}`,
-      showIf: (c) => showThreshold(c, lvl),
-    })
-    .addNumberInput({
-      category: category,
-      name: `Threshold Value`,
-      path: `thresholdvalue${lvl}`,
-      settings: {
-        integer: false,
-      },
-      showIf: (c) => showThreshold(c, lvl),
-    });
-}
 
 function _isGridLayout(c: ClusterviewOptions, lvl: number) {
   let key = `level${lvl}direction` as unknown as keyof ClusterviewOptions;
@@ -291,9 +254,13 @@ export const plugin = new PanelPlugin<ClusterviewOptions>(ClusterviewPanel).setP
   buildLevelDisplayOption(builder, 7, [false, false, 'hz']);
   buildLevelDisplayOption(builder, 8, [false, false, 'hz']);
 
-  for (let i = 0; i < MAX_THRESHOLDS; i++) {
-    buildColorOption(builder, i + 1);
-  }
+  builder.addCustomEditor({
+      editor: ConditionEditor,
+      id: `conditions`,
+      path: `conditions`,
+      category: ['Values/Colors'],
+      name: `Conditions`,
+    });
 
   return builder;
 });

@@ -1,11 +1,11 @@
-// type SeriesSize = 'sm' | 'md' | 'lg';
-type LevelDisplayDirection = 'hz' | 'vt' | 'fl' | 'gr';
 
+type LevelDisplayDirection = 'hz' | 'vt' | 'fl' | 'gr';
 type Aggregate = 'none' | 'max' | 'min' | 'avg' | 'last';
 
-
-// ClusterviewOptions also needs at least this many thresholds
-export const MAX_THRESHOLDS = 12;
+export interface Condition {
+  expression: string;
+  color: string;
+}
 
 export interface ClusterviewOptions {
   level1border: boolean;
@@ -65,32 +65,8 @@ export interface ClusterviewOptions {
   gridX8: number;
   level8direction: LevelDisplayDirection;
 
-  thresholdcolor1: string;
-  thresholdvalue1: number;
-  thresholdcolor2: string;
-  thresholdvalue2: number;
-  thresholdcolor3: string;
-  thresholdvalue3: number;
-  thresholdcolor4: string;
-  thresholdvalue4: number;
-  thresholdcolor5: string;
-  thresholdvalue5: number;
-  thresholdcolor6: string;
-  thresholdvalue6: number;
-  thresholdcolor7: string;
-  thresholdvalue7: number;
-  thresholdcolor8: string;
-  thresholdvalue8: number;
-  thresholdcolor9: string;
-  thresholdvalue9: number;
-  thresholdcolor10: string;
-  thresholdvalue10: number;
-  thresholdcolor11: string;
-  thresholdvalue11: number;
-  thresholdcolor12: string;
-  thresholdvalue12: number;
+  conditions: Condition[];
   missingcolor: string;
-
   bordercolor: string;
 
   nodeURLNewWindow: boolean;

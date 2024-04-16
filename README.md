@@ -88,11 +88,6 @@ Use this to specify the value used to determine colors for the display. This can
 * `1`
 * `value`
 
-For advanced uses, the value field can contain javascript to augment/replace the value considered for coloring. This javascript will execute for each row of data. An array named `fields` is made available that provides the data for each column as either index, name, or display name. This should always return a numerical value.
-
-* `return fields[1]*2`
-* `var a=fields['value'];if (a>15) return 1 else return 0`
-
 #### Hidden Nodes
 
 In some cases there may be nodes you wish to set aside space for but do not wish to display as missing. This might be to match a physical layout where something isn't present or populated. The hidden nodes field allows this. It takes one or more arrays of regexes to match against the different values in each layer group.
@@ -107,11 +102,34 @@ Given a dashboard having a 3 layer group hierarchy with the first layer of a,b,c
 
 A configuration for the spectrum of colors to display. Colors will be interpolated based on the query value. Values outside the range of given thresholds will be clamped to the nearest endpoint.
 
-#### Threshold Color/Value
+#### Condtions
 
-A singular color point at a particular value. Multiple thresholds can be specified to provide a full spectrum of colors.
+A set of logical conditions to determine what color to display nodes as.
+Multiple different conditional formats are supported.
 
-Exact colors for ranges are not yet supported. If only explicit values are desired, the data must either be augmented to hit values exactly or multiple thresholds of the same colors can be provided such that interpolation results in the same color.
+The simplest usage is a singular value, which is matched exactly to the field specified in value: 
+* `1` - matches 1 in the value field.
+* `'ok'` - matches 'ok' in the value field.
+
+Single, double, or no quotes can all be used to specify values.
+
+The next simplest way to to combine a logical operator with a value. This will also match against
+the field specified in value. The following logical comparisons are supported for numbers: `==, =, <, <=, >, >=, !=`.
+* `>3` - matches value field greater than 3.
+* `!=10` - matches all values not equal to 10.
+
+Additionally, regex matches can be done with `MATCH` or `MATCHES` (case insensitive). 
+This will match partial values unless ^ and $ are used:
+* `MATCH '^(ok|OK)$'` - matches any value field that equals `ok` or `OK`
+* `MATCHES ".*01$"` - matches any value field that ends with `01`
+
+Other fields can also be used (using either \$VAR or \${VAR} syntax). These can also be combined with boolean operators to create more complex conditions:
+* `$value == 0 AND $status MATCHES 'ok.*'`
+* `$value<1 && ($subvalue <10 || $subvalue == 'missing')`
+
+The supported boolean operations are: `and, &&, &, or, ||, |, ()`
+
+Conditionals are executed from top to bottom. The first matching condition will determine the color. An empty conditional field will match all existing fields.
 
 ### Aggregate
 

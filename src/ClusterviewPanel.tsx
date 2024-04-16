@@ -3,8 +3,8 @@ import { GrafanaTheme2, PanelProps } from '@grafana/data';
 import { ClusterviewOptions } from 'types';
 import { css, cx } from '@emotion/css';
 import { useTheme2 } from '@grafana/ui';
-import { buildData, DataLevel, Node, register } from './datastructure';
-import { colorLookup, ColorSpectrum } from 'ColorSpectrum';
+import { buildData, DataLevel, Node, register } from 'datastructure';
+import { colorLookup, ColorPicker } from 'Colors';
 
 export interface Props extends PanelProps<ClusterviewOptions> {}
 
@@ -29,8 +29,8 @@ export const ClusterviewPanel: React.FC<Props> = ({ options, data, width, height
     return <div>Incorrect query format</div>;
   }
 
-  const nodes = buildData(options, data.series[0].fields);
-  const colors = new ColorSpectrum(options, theme);
+  const colors = new ColorPicker(options, theme);
+  const nodes = buildData(options, data.series[0].fields, colors);
   let renderLevel = 0;
 
   /**
@@ -60,7 +60,7 @@ export const ClusterviewPanel: React.FC<Props> = ({ options, data, width, height
           `
         )}
         onClick={visitURL}
-        style={{ backgroundColor: colors.getCSSColor(node?.value) }}
+        style={{ backgroundColor: colors.getCSSColor(node?.colorIndex), ...(node.url?{cursor: "pointer"}:{})}}
         title={node.text.length && !options.nodetextDisplayed ? node.text : undefined}
       >
         {node.text.length && options.nodetextDisplayed ? node.text : ''}
@@ -95,7 +95,7 @@ export const ClusterviewPanel: React.FC<Props> = ({ options, data, width, height
       let label = options[`level${renderLevel}label` as keyof ClusterviewOptions];
       let direction = options[`level${renderLevel}direction` as keyof ClusterviewOptions];
       let boarderClass: string = styles[`${direction}border` as keyof typeof styles];
-      let gridX = options[`gridX${renderLevel}` as keyof ClusterviewOptions];
+      let gridX = options[`gridX${renderLevel}` as keyof ClusterviewOptions] as number;
       return (
         <div
           className={border ? cx(boarderClass) : ''}
@@ -127,7 +127,7 @@ export const ClusterviewPanel: React.FC<Props> = ({ options, data, width, height
   }
 
   // draw the panel
-  return <div className={cx(styles.wrapper)}>{draw(nodes)}</div>;
+  return <div style={{ overflow: 'hidden', height: '100%' }}>{draw(nodes)}</div>;
 };
 
 /**

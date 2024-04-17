@@ -123,7 +123,7 @@ This will match partial values unless ^ and $ are used:
 * `MATCH '^(ok|OK)$'` - matches any value field that equals `ok` or `OK`
 * `MATCHES ".*01$"` - matches any value field that ends with `01`
 
-Other fields can also be used (using either \$VAR or \${VAR} syntax). These can also be combined with boolean operators to create more complex conditions:
+Other fields can also be used (using either `$VAR` or `${VAR}` syntax). These can also be combined with boolean operators to create more complex conditions:
 * `$value == 0 AND $status MATCHES 'ok.*'`
 * `$value<1 && ($subvalue <10 || $subvalue == 'missing')`
 

@@ -113,7 +113,7 @@ The simplest usage is a singular value, which is matched exactly to the field sp
 
 Single, double, or no quotes can all be used to specify values.
 
-The next simplest way to to combine a logical operator with a value. This will also match against
+The next simplest way to combine a logical operator with a value. This will also match against
 the field specified in value. The following logical comparisons are supported for numbers: `==, =, <, <=, >, >=, !=`.
 * `>3` - matches value field greater than 3.
 * `!=10` - matches all values not equal to 10.

@@ -1,8 +1,9 @@
-import { buildData, DataLevel, register, _testPoints } from './datastructure';
-import { ArrayVector, TimeRange, Field, FieldType, LoadingState } from '@grafana/data';
+import { buildData, DataLevel, register, _testPoints } from 'datastructure';
+import { ArrayVector, TimeRange, Field, FieldType, LoadingState, GrafanaTheme2, ThemeVisualizationColors } from '@grafana/data';
 import { ClusterviewOptions } from 'types';
 import { ClusterviewPanel, Props } from 'ClusterviewPanel';
-import { mock } from 'ts-mockito';
+import { instance, mock, when } from 'ts-mockito';
+import { ColorPicker } from 'Colors';
 
 
 window.matchMedia =
@@ -96,8 +97,13 @@ describe('Build data structure test', () => {
     opts.options.nodetext = 'xxx';
     opts.replaceVariables = (x) => x;
 
+    const theme = mock<GrafanaTheme2>();
+    const visualization = mock<ThemeVisualizationColors>();
+    when(theme.visualization).thenReturn(instance(visualization));
+    when(visualization.getColorByName).thenReturn(color=>color);
+
     register(opts.replaceVariables);
-    const results = buildData(opts.options, opts.data.series[0].fields);
+    const results = buildData(opts.options, opts.data.series[0].fields, new ColorPicker(opts.options, instance(theme)));
     expect(results);
 
     const answer = ClusterviewPanel(opts);
@@ -136,17 +142,18 @@ describe('Build data structure test', () => {
   test('Sort', () => {
     let options = mock<ClusterviewOptions>();
     options.aggregate = 'none';
-    options.hiddennodes = '[[/A1/, /\\w2/], [/A2/, /B2/, /C2/]]';
+    // \\w -> would be entered as \w
+    options.hiddennodes = '[["A1", "\\w2"], ["A2", "B2", "C2"]]';
 
     let data = new DataLevel('cluster');
-    data.addDataNode(['A1', 'B1', 'C1'], 'n1', 0, 12345, '', 0);
-    data.addDataNode(['A1', 'B1', 'C2'], 'n2', 0, 12345, '', 0);
-    data.addDataNode(['A1', 'B2', 'C1'], 'n3', 0, 12345, '', 0);
-    data.addDataNode(['A1', 'B2', 'C2'], 'n4', 0, 12345, '', 0);
-    data.addDataNode(['A2', 'B1', 'C1'], 'n5', 0, 12345, '', 0);
-    data.addDataNode(['A2', 'B1', 'C2'], 'n6', 0, 12345, '', 0);
-    data.addDataNode(['A2', 'B2', 'C1'], 'n7', 0, 12345, '', 0);
-    data.addDataNode(['A2', 'B2', 'C2'], 'n8', 0, 12345, '', 0);
+    data.addDataNode(['A1', 'B1', 'C1'], 'n1', 0, 12345, '', 0, -1);
+    data.addDataNode(['A1', 'B1', 'C2'], 'n2', 0, 12345, '', 0, -1);
+    data.addDataNode(['A1', 'B2', 'C1'], 'n3', 0, 12345, '', 0, -1);
+    data.addDataNode(['A1', 'B2', 'C2'], 'n4', 0, 12345, '', 0, -1);
+    data.addDataNode(['A2', 'B1', 'C1'], 'n5', 0, 12345, '', 0, -1);
+    data.addDataNode(['A2', 'B1', 'C2'], 'n6', 0, 12345, '', 0, -1);
+    data.addDataNode(['A2', 'B2', 'C1'], 'n7', 0, 12345, '', 0, -1);
+    data.addDataNode(['A2', 'B2', 'C2'], 'n8', 0, 12345, '', 0, -1);
 
     // _testPoints.sortdata(data, options);
 

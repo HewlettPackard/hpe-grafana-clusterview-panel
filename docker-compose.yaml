@@ -10,8 +10,6 @@ services:
         grafana_image: ${GRAFANA_IMAGE:-grafana-enterprise}
         # grafana_version: ${GRAFANA_VERSION:-10.3.4}
         grafana_version: ${GRAFANA_VERSION:-9.3.16}
-    # environment:
-    #   - GF_INSTALL_PLUGINS=testdata
     ports:
       - 3000:3000/tcp
     volumes:

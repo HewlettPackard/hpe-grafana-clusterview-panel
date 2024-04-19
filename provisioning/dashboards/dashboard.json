@@ -38,7 +38,7 @@
         "bordercolor": "#000000",
         "fieldgrp1": "location",
         "fieldgrp2": "location",
-"fieldgrp3": "location",
+        "fieldgrp3": "location",
         "gridX1": 2,
         "gridX2": 2,
         "gridX3": 2,
@@ -47,7 +47,7 @@
         "gridX6": 2,
         "gridX7": 2,
         "gridX8": 2,
-        "hiddennodes": "[/rack-c/,/3/,/3/]",
+        "hiddennodes": "[\"rack-c\",\"3\",\"3\"]",
         "ignoreNull": false,
         "level1border": true,
         "level1direction": "gr",
@@ -84,12 +84,24 @@
         "nodetext": "${value}",
         "nodetextDisplayed": false,
         "nodevalue": "value",
-        "thresholdcolor1": "dark-green",
-        "thresholdcolor2": "#2afa37",
-        "thresholdcolor3": "red",
-        "thresholdvalue1": 12,
-        "thresholdvalue2": 15,
-        "thresholdvalue3": 17,
+        "conditions": [
+          {
+            "color": "purple",
+            "expression": "$name MATCHES 'node00[1-2]' and $value < 12.3"
+          },
+          {
+            "color": "green",
+            "expression": "<12"
+          },
+          {
+            "color": "yellow",
+            "expression": "<15"
+          },
+          {
+            "color": "red",
+            "expression": ""
+          }
+        ],
         "timestampField": "0",
         "valuesgrp1": "rack-a,rack-b,rack-c,rack-d",
         "valuesgrp2": "1,2,3",

@@ -1,5 +1,6 @@
 import { InterpolateFunction, ScopedVars, Field } from '@grafana/data';
-import { ClusterviewOptions } from './types';
+import { ClusterviewOptions } from 'types';
+import { ColorPicker } from 'Colors';
 
 export let replaceVariables: InterpolateFunction;
 
@@ -19,13 +20,15 @@ export class Node {
   value: number | null;
   timestamp: number | null;
   id: number;
+  colorIndex: number;
   url: string | null;
   static _id_count = 1;
-  constructor(text: string, value: number | null, ts: number | null, url: string | null) {
+  constructor(text: string, value: number | null, ts: number | null, url: string | null, colorIndex=-1) {
     this.text = text;
     this.value = value;
     this.timestamp = ts;
     this.url = url;
+    this.colorIndex = colorIndex;
 
     // unique id so React knows about updates (even though grafana doesn't really use them)
     this.id = Node._id_count;
@@ -77,12 +80,12 @@ export class DataLevel {
    * @param url a url fragment for clickability
    * @param level what level are we currently at
    */
-  addDataNode(names: string[], text: string, value: number | null, ts: number, url: string, level: number) {
+  addDataNode(names: string[], text: string, value: number | null, ts: number, url: string, level: number, colorIndex: number) {
     if (names.length) {
       const nextLevel = this.fetchLevel(names[0]);
-      nextLevel.addDataNode(names.splice(1), text, value, ts, url, level + 1);
+      nextLevel.addDataNode(names.splice(1), text, value, ts, url, level + 1, colorIndex);
     } else {
-      this.values.push(new Node(text, value, ts, url));
+      this.values.push(new Node(text, value, ts, url, colorIndex));
     }
   }
 
@@ -152,7 +155,7 @@ function buildParserForGroup(
     try {
       matcher = RegExp(regex);
     } catch (error) {
-      console.log('Bad regex ' + regex);
+      console.error('Bad regex ' + regex);
     }
   }
   if (regex || fieldText) {
@@ -192,7 +195,7 @@ function lookupValue(fields: Field[], txt: string, i: number) {
     try {
       value = Function('fields', rplTxt)(buildFields(fields, i));
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
   if (value !== null) {
@@ -236,7 +239,7 @@ function transformText(text: string, fields: Field[], index: number, extraFields
  * @param fields Array of data fields provided by grafana
  * @returns A DataLevel object with all data organized into a drawable structure
  */
-export const buildData = function (options: ClusterviewOptions, fields: Field[]): DataLevel {
+export const buildData = function (options: ClusterviewOptions, fields: Field[], colorPicker: ColorPicker): DataLevel {
   try {
     const data = new DataLevel('cluster');
 
@@ -269,7 +272,9 @@ export const buildData = function (options: ClusterviewOptions, fields: Field[])
       let nodeURL: string = transformText(options.nodeURL, fields, i, { value: String(value) });
 
       if (!options.ignoreNull || value != null) {
-        data.addDataNode(keys, nodetext, value, timestamp, nodeURL, 0);
+        data.addDataNode(keys, nodetext, value, timestamp, nodeURL, 0, colorPicker.pickColor((x) => {
+          return transformText(x, fields, i, { value: String(value) });
+        }, String(value)));
       }
     }
 
@@ -277,7 +282,7 @@ export const buildData = function (options: ClusterviewOptions, fields: Field[])
     hide(data, options);
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
   return new DataLevel('ERROR');
 };
@@ -399,25 +404,27 @@ function aggregateData(data: DataLevel, options: ClusterviewOptions) {
 function hide(data: DataLevel, options: ClusterviewOptions) {
   try {
     let fields = options.hiddennodes;
-    let objs = Function('return ' + fields)();
-    if (Array.isArray(objs)) {
-      if (Array.isArray(objs[0])) {
-        objs.forEach((o) => {
-          o.unshift(/cluster/);
-          _hideLevel(data, o);
-        });
-      } else {
-        objs.unshift(/cluster/);
-        _hideLevel(data, objs);
+    if (fields != null) {
+      let objs = JSON.parse(fields.replace("\\","\\\\"));
+      if (Array.isArray(objs)) {
+        if (Array.isArray(objs[0])) {
+          objs.forEach((o) => {
+            o.unshift(/cluster/);
+            _hideLevel(data, o);
+          });
+        } else {
+          objs.unshift(/cluster/);
+          _hideLevel(data, objs);
+        }
       }
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
 function _hideLevel(data: DataLevel, levels: RegExp[]): boolean {
-  if (!levels.length || levels[0].test(data.prefix)) {
+  if (!levels.length || RegExp(levels[0]).test(data.prefix)) {
     let remaining = levels.slice(1);
     let vals = Array.from(data.subLevel.values());
     let results = vals.map((x) => _hideLevel(x, remaining));

@@ -140,7 +140,6 @@ In the case of multiple duplicate entries, use this method to merge them togethe
 * None - Don't do any merging. If any duplicates exist, the most recent value from the query is used.
 * Max - Maximum value of all duplicates.
 * Min - Minimum value of all duplicates.
-* Avg - The average of all duplicates.
 * Last - The most recent value is used. This requires a Timestamp Field to be selected.
 
 #### Timestamp Field

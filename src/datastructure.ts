@@ -17,13 +17,13 @@ export function register(vars: InterpolateFunction) {
  */
 export class Node {
   text: string;
-  value: number | null;
+  value: string | null;
   timestamp: number | null;
   id: number;
   colorIndex: number;
   url: string | null;
   static _id_count = 1;
-  constructor(text: string, value: number | null, ts: number | null, url: string | null, colorIndex=-1) {
+  constructor(text: string, value: string | null, ts: number | null, url: string | null, colorIndex=-1) {
     this.text = text;
     this.value = value;
     this.timestamp = ts;
@@ -80,7 +80,7 @@ export class DataLevel {
    * @param url a url fragment for clickability
    * @param level what level are we currently at
    */
-  addDataNode(names: string[], text: string, value: number | null, ts: number, url: string, level: number, colorIndex: number) {
+  addDataNode(names: string[], text: string, value: string | null, ts: number, url: string, level: number, colorIndex: number) {
     if (names.length) {
       const nextLevel = this.fetchLevel(names[0]);
       nextLevel.addDataNode(names.splice(1), text, value, ts, url, level + 1, colorIndex);
@@ -163,19 +163,6 @@ function buildParserForGroup(
   }
 }
 
-function buildFields(fields: Field[], i: number) {
-  let result: { [key: string]: string } = {};
-  fields.forEach((v, j) => {
-    let value = v.values.get(i);
-    result[j] = value;
-    result[v.name] = value;
-    if (v.config?.displayName) {
-      result[v.config.displayName] = value;
-    }
-  });
-  return result;
-}
-
 /**
  * The value needs to be more complex than just a simple lookup. Try the field
  * as a raw number, as a generic field, and then as a chunk of javascript.
@@ -185,21 +172,18 @@ function buildFields(fields: Field[], i: number) {
  * @param i Which index of the data we're on
  * @returns the resulting value we should use
  */
-function lookupValue(fields: Field[], txt: string, i: number) {
+function lookupValue(fields: Field[], txt: string, i: number): string | null {
   let rplTxt = replaceVariables(txt);
   let valueindex = lookupFieldIndex(fields, rplTxt, false);
   let value = null;
   if (!isNaN(+valueindex!)) {
     value = fields[valueindex!].values.get(i)
   } else {
-    try {
-      value = Function('fields', rplTxt)(buildFields(fields, i));
-    } catch (e) {
-      console.error(e);
-    }
+    // unknown type. We'll just use it verbatim
+    value = txt
   }
   if (value !== null) {
-    return Number(value);
+    return value;
   }
   return null;
 }
@@ -274,7 +258,7 @@ export const buildData = function (options: ClusterviewOptions, fields: Field[],
       if (!options.ignoreNull || value != null) {
         data.addDataNode(keys, nodetext, value, timestamp, nodeURL, 0, colorPicker.pickColor((x) => {
           return transformText(x, fields, i, { value: String(value) });
-        }, String(value)));
+        }, value));
       }
     }
 
@@ -343,26 +327,6 @@ function aggregateData(data: DataLevel, options: ClusterviewOptions) {
     }
     else {
       switch (options.aggregate) {
-        case 'avg':
-          let avgVal: number | null = null;
-          let avgTs: number | null = null;
-          let count = 0;
-          let firstNode = data.firstNotEmptyNode();
-          data.values.forEach((n) => {
-            if (n.value != null) {
-              avgVal! += n.value;
-              avgTs! += n.timestamp!;
-              count++;
-            }
-          });
-          if (count >0) {
-            avgVal! /= count;
-            avgTs! /= count;
-          } 
-          data.values.length = 0;
-          data.values.push(new Node(firstNode.text, avgVal, avgTs, firstNode.url));
-          
-          break;
         case 'last':
           aggregate(data.values, (a, b) => {
             if (a.timestamp! == null) {
@@ -382,7 +346,7 @@ function aggregateData(data: DataLevel, options: ClusterviewOptions) {
             if (b.value! == null) {
               return true;
             }
-            return a.value! < b.value!;
+            return Number(a.value) < Number(b.value);
           });
           break;
         case 'max':
@@ -393,7 +357,7 @@ function aggregateData(data: DataLevel, options: ClusterviewOptions) {
             if (b.value! == null) {
               return true;
             }
-            return a.value! > b.value!;
+            return Number(a.value) > Number(b.value);
           });
           break;
       }

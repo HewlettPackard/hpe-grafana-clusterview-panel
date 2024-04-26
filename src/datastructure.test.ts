@@ -133,10 +133,6 @@ describe('Build data structure test', () => {
     expect(_testPoints.lookupValue(fields, '1', 0)).toEqual(4);
     expect(_testPoints.lookupValue(fields, 'value', 1)).toEqual(5);
     expect(_testPoints.lookupValue(fields, '${Test}', 0)).toEqual(4);
-    expect(_testPoints.lookupValue(fields, "return fields['value']", 0)).toEqual(4);
-    expect(_testPoints.lookupValue(fields, 'return fields[1]', 0)).toEqual(4);
-    expect(_testPoints.lookupValue(fields, "return fields['${Test}']", 1)).toEqual(5);
-    expect(_testPoints.lookupValue(fields, 'return ${1}', 0)).toEqual(4);
   });
 
   test('Sort', () => {

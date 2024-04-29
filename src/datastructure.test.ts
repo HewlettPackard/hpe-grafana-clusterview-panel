@@ -133,10 +133,6 @@ describe('Build data structure test', () => {
     expect(_testPoints.lookupValue(fields, '1', 0)).toEqual(4);
     expect(_testPoints.lookupValue(fields, 'value', 1)).toEqual(5);
     expect(_testPoints.lookupValue(fields, '${Test}', 0)).toEqual(4);
-    expect(_testPoints.lookupValue(fields, "return fields['value']", 0)).toEqual(4);
-    expect(_testPoints.lookupValue(fields, 'return fields[1]', 0)).toEqual(4);
-    expect(_testPoints.lookupValue(fields, "return fields['${Test}']", 1)).toEqual(5);
-    expect(_testPoints.lookupValue(fields, 'return ${1}', 0)).toEqual(4);
   });
 
   test('Sort', () => {
@@ -146,14 +142,14 @@ describe('Build data structure test', () => {
     options.hiddennodes = '[["A1", "\\w2"], ["A2", "B2", "C2"]]';
 
     let data = new DataLevel('cluster');
-    data.addDataNode(['A1', 'B1', 'C1'], 'n1', 0, 12345, '', 0, -1);
-    data.addDataNode(['A1', 'B1', 'C2'], 'n2', 0, 12345, '', 0, -1);
-    data.addDataNode(['A1', 'B2', 'C1'], 'n3', 0, 12345, '', 0, -1);
-    data.addDataNode(['A1', 'B2', 'C2'], 'n4', 0, 12345, '', 0, -1);
-    data.addDataNode(['A2', 'B1', 'C1'], 'n5', 0, 12345, '', 0, -1);
-    data.addDataNode(['A2', 'B1', 'C2'], 'n6', 0, 12345, '', 0, -1);
-    data.addDataNode(['A2', 'B2', 'C1'], 'n7', 0, 12345, '', 0, -1);
-    data.addDataNode(['A2', 'B2', 'C2'], 'n8', 0, 12345, '', 0, -1);
+    data.addDataNode(['A1', 'B1', 'C1'], 'n1', "0", 12345, '', 0, -1);
+    data.addDataNode(['A1', 'B1', 'C2'], 'n2', "0", 12345, '', 0, -1);
+    data.addDataNode(['A1', 'B2', 'C1'], 'n3', "0", 12345, '', 0, -1);
+    data.addDataNode(['A1', 'B2', 'C2'], 'n4', "0", 12345, '', 0, -1);
+    data.addDataNode(['A2', 'B1', 'C1'], 'n5', "0", 12345, '', 0, -1);
+    data.addDataNode(['A2', 'B1', 'C2'], 'n6', "0", 12345, '', 0, -1);
+    data.addDataNode(['A2', 'B2', 'C1'], 'n7', "0", 12345, '', 0, -1);
+    data.addDataNode(['A2', 'B2', 'C2'], 'n8', "0", 12345, '', 0, -1);
 
     // _testPoints.sortdata(data, options);
 

@@ -127,7 +127,7 @@ export const ClusterviewPanel: React.FC<Props> = ({ options, data, width, height
   }
 
   // draw the panel
-  return <div style={{ overflow: 'hidden', height: '100%' }}>{draw(nodes)}</div>;
+  return <div style={{ overflow: 'hidden', height: '100%' , width: 'fit-content'}}>{draw(nodes)}</div>;
 };
 
 /**

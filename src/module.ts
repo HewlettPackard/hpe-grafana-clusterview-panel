@@ -148,10 +148,10 @@ export const plugin = new PanelPlugin<ClusterviewOptions>(ClusterviewPanel).setP
       path: 'nodevalue',
       name: 'Value Field',
       category: ['Node'],
-      description: 'Field to use for value. index or name or javascript',
+      description: 'Field to use for value. index or name',
       defaultValue: '1',
       settings: {
-        placeholder: '1  fieldname `return field[3] || field["value"];`',
+        placeholder: '1  fieldname`',
       },
     })
     .addTextInput({
@@ -161,7 +161,7 @@ export const plugin = new PanelPlugin<ClusterviewOptions>(ClusterviewPanel).setP
       description: 'List(s) of regexs to filter out displayed nodes',
       defaultValue: '',
       settings: {
-        placeholder: '[[/x11/,/02/],[/x21/,//]]',
+        placeholder: '[["x11","02"],["x21",""]]',
       },
     })
     .addNumberInput({
@@ -190,7 +190,7 @@ export const plugin = new PanelPlugin<ClusterviewOptions>(ClusterviewPanel).setP
     .addSelect({
       path: 'aggregate',
       name: 'Aggregate data',
-      category: ['Aggregate'],
+      category: ['Aggregation'],
       defaultValue: 'None',
       settings: {
         options: [
@@ -207,10 +207,6 @@ export const plugin = new PanelPlugin<ClusterviewOptions>(ClusterviewPanel).setP
             value: 'min',
           },
           {
-            label: 'Avg',
-            value: 'avg',
-          },
-          {
             label: 'Last',
             value: 'last',
           },
@@ -220,7 +216,7 @@ export const plugin = new PanelPlugin<ClusterviewOptions>(ClusterviewPanel).setP
     .addTextInput({
       path: 'timestampField',
       name: 'Timestamp Field',
-      category: ['Aggregate'],
+      category: ['Aggregation'],
       showIf: (config) => config.aggregate === 'last',
       settings: {
         placeholder: '1  fieldname',
@@ -229,7 +225,7 @@ export const plugin = new PanelPlugin<ClusterviewOptions>(ClusterviewPanel).setP
     .addBooleanSwitch({
       path: `ignoreNull`,
       name: 'Ignore Null Values',
-      category: ['Aggregate'],
+      category: ['Aggregation'],
       defaultValue: true,
     })
     .addColorPicker({

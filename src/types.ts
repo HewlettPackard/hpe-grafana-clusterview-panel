@@ -1,6 +1,6 @@
 
 type LevelDisplayDirection = 'hz' | 'vt' | 'fl' | 'gr';
-type Aggregate = 'none' | 'max' | 'min' | 'avg' | 'last';
+type Aggregate = 'none' | 'max' | 'min' | 'last';
 
 export interface Condition {
   expression: string;
